@@ -20,7 +20,17 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map {
                     if (binding.metricsswitch.isChecked) {
-                        (it / 1.6).toInt().toString() + getString(R.string.mph)
+                        (it / 1.6).toInt()
+                    } else {
+                        it
+                    }
+                }
+                .filter {
+                    if (binding.by5switch.isChecked) it % 5 == 0 else true
+                }
+                .map {
+                    if (binding.metricsswitch.isChecked) {
+                        it.toString() + getString(R.string.mph)
                     } else {
                         it.toString() + getString(R.string.kmh)
                     }

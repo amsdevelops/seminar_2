@@ -3,4 +3,5 @@
     <string name="start">start</string>
     <string name="mph">mph</string>
     <string name="kmh">km/h</string>
+    <string name="by5">by 5</string>
 </resources>
