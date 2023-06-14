@@ -18,6 +18,13 @@ class MainActivity : AppCompatActivity() {
         binding.button.setOnClickListener {
             createSpeedometerValues()
                 .observeOn(AndroidSchedulers.mainThread())
+                .map {
+                    if (binding.metricsswitch.isChecked) {
+                        (it / 1.6).toInt().toString() + getString(R.string.mph)
+                    } else {
+                        it.toString() + getString(R.string.kmh)
+                    }
+                }
                 .subscribe {
                     binding.speedometer.text = it.toString()
                 }
