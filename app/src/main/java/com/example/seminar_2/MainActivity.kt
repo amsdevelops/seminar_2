@@ -6,7 +6,10 @@ import com.example.seminar_2.databinding.ActivityMainBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.random.nextLong
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -18,7 +21,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.button.setOnClickListener {
-            createSpeedometerValues()
+            Observable.combineLatest(createSpeedometerValues(), createSpeedometerValues2()) { speed1, speed2 ->
+                (speed1 + speed2) / 2
+            }
                 .observeOn(AndroidSchedulers.mainThread())
                 .map {
                     if (binding.metricsswitch.isChecked) {
@@ -44,6 +49,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun createSpeedometerValues() = Observable.create<Int> {
+        var speed = 0
+        while (true) {
+            Thread.sleep(Random.nextLong(500))
+            if (isAccelerate) {
+                speed++
+                if (speed == 100) isAccelerate = false
+            } else {
+                speed--
+                if (speed == 0) isAccelerate = true
+            }
+            it.onNext(speed)
+        }
+    }.subscribeOn(Schedulers.io())
+
+    fun createSpeedometerValues2() = Observable.create<Int> {
         var speed = 0
         while (true) {
             Thread.sleep(Random.nextLong(500))
