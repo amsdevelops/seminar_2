@@ -10,6 +10,8 @@ import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var isAccelerate = true
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -32,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun createSpeedometerValues() = Observable.create<Int> {
-        var isAccelerate = true
         var speed = 0
         while (true) {
             Thread.sleep(Random.nextLong(500))
